@@ -1,14 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdExpandLess } from "react-icons/md";
 import { MdExpandMore } from "react-icons/md";
 
+const DatePicker = (props) => {
+  let [day, setDay] = useState(15);
+  let [month, setMonth] = useState(0);
+  let [year, setYear] = useState(2021);
 
+  const { setDateString } = props;
 
+  let monthsList = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
-const DatePicker = () => {
-  const [day, setDay] = useState(15);
-  const [month, setMonth] = useState()
-  const [year, setYear] = useState(2021);
+  useEffect(() => {
+    setDateString(`${monthsList[month]}, ${day} ${year}`);
+  }, [month, day, year]);
+
   const range = (start, end) => {
     if (start === end) return [start];
     return [start, ...range(start + 1, end)];
@@ -22,59 +41,63 @@ const DatePicker = () => {
   //   }
   //   console.log(shortMonths);
   // };
-  let monthsList = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ]
-  
+
+  const increaseMonth = () => {
+    month < 11 ? setMonth(month + 1) : setMonth(0);
+  };
+
+  const decreaseMonth = () => {
+    month > 0 ? setMonth(month - 1) : setMonth(11);
+  };
+
+  const increaseDay = () => {
+    day < 31 ? setDay(day + 1) : setDay(1);
+  };
+
+  const decreaseDay = () => {
+    day > 1 ? setDay(day - 1) : setDay(31);
+  };
+
+  const increaseYear = () => {
+    year < 2021 ? setYear(year + 1) : setYear(2021);
+  };
 
   return (
     <div className="container">
       <div className="date">
-        <div className="year" style={{ backgroundColor: "red" }}>
-          <div>
+        <div className="month-container">
+          <div className="up-arrow">
             <MdExpandLess
-            onClick={() => {
-              let nextMonth = '';
-              for (let i = 0; i < monthsList.length; i++) {         
-                let nextMonth = monthsList[i + 1];
-                }
-                setMonth(nextMonth)
-              }
-            }
-            />
-            <p>{month}</p>
-            <MdExpandMore
-            onClick={() => setMonth(month - 1)}
+              onClick={() => {
+                decreaseMonth();
+              }}
             />
           </div>
-          <div>
-            <MdExpandLess
-            onClick={() => setDay(day + 1)}
-            />
-            <p>{day}</p>
-            <MdExpandMore 
-            onClick={() => setDay(day - 1)}
+          <p className="text">{monthsList[month]}</p>
+          <div className="down-arrow">
+            <MdExpandMore
+              onClick={() => {
+                increaseMonth();
+              }}
             />
           </div>
-          <div>
-            <MdExpandLess
-            onClick={() => setYear(year + 1)}
-            />
-            <p>{year}</p>
-            <MdExpandMore
-            onClick={() => setYear(year - 1)}
-            />
+        </div>
+        <div className="day-container">
+          <div className="up-arrow">
+            <MdExpandLess onClick={() => increaseDay()} />
+          </div>
+          <p>{day}</p>
+          <div className="down-arrow">
+            <MdExpandMore onClick={() => decreaseDay()} />
+          </div>
+        </div>
+        <div className="year-container">
+          <div className="up-arrow">
+            <MdExpandLess onClick={() => increaseYear()} />
+          </div>
+          <p>{year}</p>
+          <div className="down-arrow">
+            <MdExpandMore onClick={() => setYear(year - 1)} />
           </div>
         </div>
       </div>
